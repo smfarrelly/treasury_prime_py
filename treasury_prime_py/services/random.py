@@ -15,6 +15,18 @@ FAKER = Faker(DEFAULT_LOCALE)
 LOGGER.info(f"Setting fake data locale for {FAKER.current_country()}")
 
 
+def credit_card_number():
+    return FAKER.credit_card_number()
+
+
+def credit_card_cvc():
+    return FAKER.credit_card_security_code()
+
+
+def credit_card_expire():
+    return FAKER.credit_card_expire()
+
+
 def date_of_birth():
     return str(FAKER.date_of_birth(None, 21, 100))
 
@@ -71,6 +83,10 @@ def address(country_code="US"):
         "postal_code": zipp,
         "country": country_code,
     }
+
+
+def zip_code():
+    return FAKER.postalcode()
 
 
 def tin(status=None):

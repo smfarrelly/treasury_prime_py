@@ -64,6 +64,7 @@ class AccountApplication(Base):
         cls,
         account_product_id=None,
         business_application_id=None,
+        deposit_id=None,
         person_applications=None,
         primary_person_application_id=None,
     ):
@@ -82,6 +83,9 @@ class AccountApplication(Base):
             "account_product_id": account_product_id,
             "primary_person_application_id": primary_person_application_id,
         }
+
+        if deposit_id is not None:
+            body["deposit_id"] = deposit_id
 
         # Default to Person Application
         if business_application_id is None:
