@@ -19,6 +19,22 @@ class Base(Munch):
         return r if client is None else client
 
     @classmethod
+    def get(
+        cls, client=None, page_cursor=None, page_size=None, from_date=None, to_date=None
+    ):
+        # https://developers.treasuryprime.com/docs/introduction#pagination
+        params = {
+            "page_cursor": page_cursor,
+            "page_size": page_size,
+            "from_date": from_date,
+            "to_date": to_date,
+        }
+        params = {k: v for k, v in params.items() if v is not None}
+        response = cls._req(client).get(f"{cls._API_PATH}", params=params)
+        data = response.json()["data"]
+        return [cls.fromDict(i) for i in data]
+
+    @classmethod
     def get_by_id(cls, _id, client=None):
         response = cls._req(client).get(f"{cls._API_PATH}/{_id}")
         return cls.fromDict(response.json())
