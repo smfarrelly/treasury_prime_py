@@ -66,4 +66,4 @@ class SubObject(Base):
                 f"instantiated directly via the API."
             )
         else:
-            super(SubObject, cls).__init__(with_request=with_request, **kwargs)
+            return super().create(with_request=with_request, **kwargs)
