@@ -141,6 +141,10 @@ def company_name():
     return FAKER.company()
 
 
+def company_id():
+    return str(FAKER.random_int(1000000000, 9999999999))
+
+
 def bank_name():
     return company_name() + " Bank"
 
