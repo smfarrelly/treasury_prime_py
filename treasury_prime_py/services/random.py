@@ -124,9 +124,10 @@ def routing_number():
     return ABA_ROUTING_NUMS[index]
 
 
-def amount():
-    amount = float(FAKER.random_int(1, 5000))
-    return f"{amount}0"
+def amount(max_dollar_amount=5000):
+    dollar_amount = FAKER.random_int(1, max_dollar_amount)
+    cents_amount = FAKER.random_int(10, 99)
+    return f"{dollar_amount}.{cents_amount}"
 
 
 def pseudoword(length):
