@@ -55,7 +55,10 @@ class Base(Munch):
             headers["X-Idempotency-Key"] = str(uuid4())
             response = cls._req(client).post(cls._API_PATH, json=body, headers=headers)
             if response.ok:
-                return cls.fromDict(response.json())
+                if response.headers.get('Content-Type','').startswith('application/json'):
+                    return cls.fromDict(response.json())
+                else:
+                    return {}
             LOGGER.error(
                 f"FAILED to create {cls} - {cls._API_PATH}. "
                 f"Status code:  {response.status_code} "
