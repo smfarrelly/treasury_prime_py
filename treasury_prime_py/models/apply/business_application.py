@@ -89,7 +89,7 @@ class BusinessApplication(Base):
         name = tp_random.company_name() if name is None else name
         urls = [tp_random.url()]
         phone_number = (
-            tp_random.us_phone_number() if phone_number is None else phone_number
+            tp_random.phone_number() if phone_number is None else phone_number
         )
         tin = tp_random.tin() if tin is None else tin
         legal_structure = tp_random.legal_structure()
