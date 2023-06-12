@@ -4,6 +4,7 @@ import random
 import re
 import string
 
+import phonenumbers
 import shortuuid
 from faker import Faker
 
@@ -43,8 +44,15 @@ def last_name():
     return FAKER.last_name()
 
 
-def us_phone_number():
-    return FAKER.phone_number()
+def phone_number():
+    p = FAKER.phone_number()
+    if "x" in p:
+        p = p[: p.index("x")]
+    if "001-" in p:
+        p = p[4:]
+    parsed = phonenumbers.parse(p, FAKER.current_country_code())
+
+    return phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)
 
 
 def citizenship():
