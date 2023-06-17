@@ -44,7 +44,7 @@ class Counterparty(Base):
         address_on_account = (
             tp_random.address() if address_on_account is None else address_on_account
         )
-        bank_name = tp_random.bank_name() if bank_name is None else bank_name
+        bank_name = tp_random.bank_name()[:35] if bank_name is None else bank_name
         bank_address = tp_random.address() if bank_address is None else bank_address
         plaid_token = tp_random.plaid_token() if plaid_token is None else plaid_token
         body = {

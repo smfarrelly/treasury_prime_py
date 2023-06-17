@@ -4,6 +4,7 @@ import random
 import re
 import string
 
+import phonenumbers
 import shortuuid
 from faker import Faker
 
@@ -13,6 +14,18 @@ LOGGER = logging.getLogger(__name__)
 DEFAULT_LOCALE = os.getenv("DEFAULT_LOCALE", "en_US")
 FAKER = Faker(DEFAULT_LOCALE)
 LOGGER.info(f"Setting fake data locale for {FAKER.current_country()}")
+
+
+def credit_card_number():
+    return FAKER.credit_card_number()
+
+
+def credit_card_cvc():
+    return FAKER.credit_card_security_code()
+
+
+def credit_card_expire():
+    return FAKER.credit_card_expire()
 
 
 def date_of_birth():
@@ -31,8 +44,15 @@ def last_name():
     return FAKER.last_name()
 
 
-def us_phone_number():
-    return FAKER.phone_number()
+def phone_number():
+    p = FAKER.phone_number()
+    if "x" in p:
+        p = p[: p.index("x")]
+    if "001-" in p:
+        p = p[4:]
+    parsed = phonenumbers.parse(p, FAKER.current_country_code())
+
+    return phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)
 
 
 def citizenship():
@@ -73,6 +93,10 @@ def address(country_code="US"):
     }
 
 
+def zip_code():
+    return FAKER.postalcode()
+
+
 def tin(status=None):
     """
     Creates tin/ssn for status simulation
@@ -108,9 +132,10 @@ def routing_number():
     return ABA_ROUTING_NUMS[index]
 
 
-def amount():
-    amount = float(FAKER.random_int(1, 5000))
-    return f"{amount}0"
+def amount(min_dollar_amount=1, max_dollar_amount=5000):
+    dollar_amount = FAKER.random_int(min_dollar_amount, max_dollar_amount)
+    cents_amount = FAKER.random_int(10, 99)
+    return f"{dollar_amount}.{cents_amount}"
 
 
 def pseudoword(length):
@@ -123,6 +148,10 @@ def text(length):
 
 def company_name():
     return FAKER.company()
+
+
+def company_id():
+    return str(FAKER.random_int(1000000000, 9999999999))
 
 
 def bank_name():

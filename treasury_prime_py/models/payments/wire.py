@@ -20,7 +20,7 @@ class Wire(Base):
             Counterparty.fake_id() if counterparty_id is None else counterparty_id
         )
         userdata = (
-            {"manual": True, "scheduled_settlement": 0}
+            {"manual": False, "scheduled_settlement": 0}
             if userdata is None
             else userdata
         )
