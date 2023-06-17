@@ -99,7 +99,7 @@ class ACH(Base):
         sec_details = ACHWEBDetails.random_body()
         service = ACHService.STANDARD if service is None else service
         userdata = (
-            {"manual": True, "scheduled_settlement": 0}
+            {"manual": False, "scheduled_settlement": 0}
             if userdata is None
             else userdata
         )
