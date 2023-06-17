@@ -20,7 +20,14 @@ class Base(Munch):
 
     @classmethod
     def get(
-        cls, client=None, page_cursor=None, page_size=None, from_date=None, to_date=None
+        cls,
+        client=None,
+        page_cursor=None,
+        page_size=None,
+        from_date=None,
+        to_date=None,
+        obj_id=None,
+        format_url_kwargs=None,
     ):
         # https://developers.treasuryprime.com/docs/introduction#pagination
         params = {
@@ -30,7 +37,12 @@ class Base(Munch):
             "to_date": to_date,
         }
         params = {k: v for k, v in params.items() if v is not None}
-        response = cls._req(client).get(f"{cls._API_PATH}", params=params)
+
+        url = f"{cls._API_PATH}"
+        if format_url_kwargs is not None:
+            url = url.format(**format_url_kwargs)
+
+        response = cls._req(client).get(url, params=params)
         data = response.json()["data"]
         return [cls.fromDict(i) for i in data]
 
