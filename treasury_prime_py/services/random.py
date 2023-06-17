@@ -132,8 +132,8 @@ def routing_number():
     return ABA_ROUTING_NUMS[index]
 
 
-def amount(max_dollar_amount=5000):
-    dollar_amount = FAKER.random_int(1, max_dollar_amount)
+def amount(min_dollar_amount=1, max_dollar_amount=5000):
+    dollar_amount = FAKER.random_int(min_dollar_amount, max_dollar_amount)
     cents_amount = FAKER.random_int(10, 99)
     return f"{dollar_amount}.{cents_amount}"
 
