@@ -63,11 +63,16 @@ class Base(Munch):
     def create(cls, body=None, headers=None, client=None, with_request=True, **kwargs):
         body = cls.random_body(**kwargs) if body is None else body
         if with_request:
-            headers = {} if headers is None else headers
+            if client is None:
+                headers = {} if headers is None else headers
+            else:
+                headers = client.headers
             headers["X-Idempotency-Key"] = str(uuid4())
             response = cls._req(client).post(cls._API_PATH, json=body, headers=headers)
             if response.ok:
-                if response.headers.get('Content-Type','').startswith('application/json'):
+                if response.headers.get("Content-Type", "").startswith(
+                    "application/json"
+                ):
                     return cls.fromDict(response.json())
                 else:
                     return {}

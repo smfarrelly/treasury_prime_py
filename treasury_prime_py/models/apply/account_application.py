@@ -74,7 +74,7 @@ class AccountApplication(Base):
             else account_product_id
         )
         primary_person_application_id = (
-            person_applications[0].id
+            person_applications[0]["id"]
             if primary_person_application_id is None
             else primary_person_application_id
         )
@@ -101,12 +101,7 @@ class AccountApplication(Base):
                 "Business applications do not accept person_applications. "
                 "Did you mean to set the primary_person_application_id?"
             )
-        else:
-            if not (business_application_id and primary_person_application_id):
-                raise AccountApplicationConfigError(
-                    "Business applications require both business_application_id "
-                    "and primary_person_application_id."
-                )
+        if business_application_id:
             body["business_application_id"] = business_application_id
 
         return body
