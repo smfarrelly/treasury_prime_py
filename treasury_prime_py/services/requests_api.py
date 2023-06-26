@@ -11,10 +11,11 @@ s = requests.Session()
 class RequestsApi:
     """Class for session persistence and connection pooling"""
 
-    def __init__(self, config, **kwargs):
+    def __init__(self, config, headers=None, **kwargs):
         self.session = requests.Session()
         self.base_url = config.base_url
         self.session.auth = config.auth
+        self.headers = {} if headers is None else headers
         for arg in kwargs:
             if isinstance(kwargs[arg], dict):
                 kwargs[arg] = self.__deep_merge(getattr(self.session, arg), kwargs[arg])
