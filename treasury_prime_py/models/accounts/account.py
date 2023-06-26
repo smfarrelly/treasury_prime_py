@@ -1,4 +1,5 @@
 import enum
+import logging
 
 from treasury_prime_py.models.base import Base
 from treasury_prime_py.models.transactions.transaction import Transaction
@@ -35,3 +36,22 @@ class Account(Base):
         return AccountTransaction.get(
             client=client, format_url_kwargs={"id": account_id}
         )
+
+    def sandbox_fund(self, amount, simulation_cls, client=None):
+        from treasury_prime_py.models.simulations.ach import IncomingACHSimulation
+        from treasury_prime_py.models.simulations.wire import IncomingWireSimulation
+
+        body_args = {"amount": amount}
+        if simulation_cls == IncomingACHSimulation:
+            body_args["account_number"] = self.account_number
+        elif simulation_cls == IncomingWireSimulation:
+            body_args["account_id"] = self.id
+        else:
+            raise ValueError(
+                "One of IncomingACHSimulation or IncomingWireSimulation is required."
+            )
+        simulation_cls.create(
+            body=simulation_cls.random_body(**body_args),
+            client=client,
+        )
+        logging.info(f"Funded {self} with {amount}")
