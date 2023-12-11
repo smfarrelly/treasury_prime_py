@@ -24,7 +24,7 @@ class Book(Base):
         )
         to_account_id = Account.fake_id() if to_account_id is None else to_account_id
         userdata = (
-            {"manual": True, "scheduled_settlement": 0}
+            {"manual": False, "scheduled_settlement": 0}
             if userdata is None
             else userdata
         )

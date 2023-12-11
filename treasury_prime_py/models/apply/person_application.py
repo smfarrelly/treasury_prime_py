@@ -29,7 +29,7 @@ class PersonApplication(Base):
         first_name = tp_random.first_name() if first_name is None else first_name
         last_name = tp_random.last_name() if last_name is None else last_name
         phone_number = (
-            tp_random.us_phone_number() if phone_number is None else phone_number
+            tp_random.phone_number() if phone_number is None else phone_number
         )
         physical_address = (
             tp_random.address(country_code)

@@ -19,6 +19,34 @@ class Base(Munch):
         return r if client is None else client
 
     @classmethod
+    def get(
+        cls,
+        client=None,
+        page_cursor=None,
+        page_size=None,
+        from_date=None,
+        to_date=None,
+        obj_id=None,
+        format_url_kwargs=None,
+    ):
+        # https://developers.treasuryprime.com/docs/introduction#pagination
+        params = {
+            "page_cursor": page_cursor,
+            "page_size": page_size,
+            "from_date": from_date,
+            "to_date": to_date,
+        }
+        params = {k: v for k, v in params.items() if v is not None}
+
+        url = f"{cls._API_PATH}"
+        if format_url_kwargs is not None:
+            url = url.format(**format_url_kwargs)
+
+        response = cls._req(client).get(url, params=params)
+        data = response.json()["data"]
+        return [cls.fromDict(i) for i in data]
+
+    @classmethod
     def get_by_id(cls, _id, client=None):
         response = cls._req(client).get(f"{cls._API_PATH}/{_id}")
         return cls.fromDict(response.json())
@@ -35,11 +63,19 @@ class Base(Munch):
     def create(cls, body=None, headers=None, client=None, with_request=True, **kwargs):
         body = cls.random_body(**kwargs) if body is None else body
         if with_request:
-            headers = {} if headers is None else headers
+            if client is None:
+                headers = {} if headers is None else headers
+            else:
+                headers = client.headers
             headers["X-Idempotency-Key"] = str(uuid4())
             response = cls._req(client).post(cls._API_PATH, json=body, headers=headers)
             if response.ok:
-                return cls.fromDict(response.json())
+                if response.headers.get("Content-Type", "").startswith(
+                    "application/json"
+                ):
+                    return cls.fromDict(response.json())
+                else:
+                    return {}
             LOGGER.error(
                 f"FAILED to create {cls} - {cls._API_PATH}. "
                 f"Status code:  {response.status_code} "
@@ -66,4 +102,4 @@ class SubObject(Base):
                 f"instantiated directly via the API."
             )
         else:
-            super(SubObject, cls).__init__(with_request=with_request, **kwargs)
+            return super().create(with_request=with_request, **kwargs)

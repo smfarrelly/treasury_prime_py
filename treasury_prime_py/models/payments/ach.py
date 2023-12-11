@@ -1,9 +1,9 @@
 import enum
 
 import treasury_prime_py.services.random as tp_random
-from treasury_prime_py.models.accounts.accounts.account import Account
-from treasury_prime_py.models.accounts.accounts.counterparty import Counterparty
+from treasury_prime_py.models.accounts.account import Account
 from treasury_prime_py.models.base import Base, SubObject
+from treasury_prime_py.models.payments.counterparty import Counterparty
 from treasury_prime_py.models.payments.shared import PaymentDirection
 
 
@@ -99,7 +99,7 @@ class ACH(Base):
         sec_details = ACHWEBDetails.random_body()
         service = ACHService.STANDARD if service is None else service
         userdata = (
-            {"manual": True, "scheduled_settlement": 0}
+            {"manual": False, "scheduled_settlement": 0}
             if userdata is None
             else userdata
         )
@@ -107,9 +107,9 @@ class ACH(Base):
             "account_id": account_id,
             "amount": amount,
             "counterparty_id": counterparty_id,
-            "direction": direction,
-            "sec_code": sec_code,
+            "direction": str(direction),
+            "sec_code": str(sec_code),
             "sec_details": sec_details,
-            "service": service,
+            "service": str(service),
             "userdata": userdata,
         }
