@@ -4,14 +4,6 @@ from treasury_prime_py.models.base import Base
 from treasury_prime_py.services.config import make_url
 
 
-class AccountType(enum.Enum):
-    CHECKING = enum.auto()
-    SAVINGS = enum.auto()
-
-    def __str__(self):
-        return self.name.lower()
-
-
 class ApiKey(Base):
     """https://developers.treasuryprime.com/guides/getting-started"""
 

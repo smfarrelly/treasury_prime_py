@@ -73,19 +73,7 @@ class AccountApplication(Base):
             if account_product_id is None
             else account_product_id
         )
-        primary_person_application_id = (
-            person_applications[0]["id"]
-            if primary_person_application_id is None
-            else primary_person_application_id
-        )
-        body = {
-            "account_id": None,
-            "account_product_id": account_product_id,
-            "primary_person_application_id": primary_person_application_id,
-        }
-
-        if deposit_id is not None:
-            body["deposit_id"] = deposit_id
+        body = {"account_id": None, "account_product_id": account_product_id}
 
         # Default to Person Application
         if business_application_id is None:
@@ -96,6 +84,14 @@ class AccountApplication(Base):
             )
             body["person_applications"] = person_applications
 
+        body["primary_person_application_id"] = (
+            person_applications[0]["id"]
+            if primary_person_application_id is None
+            else primary_person_application_id
+        )
+
+        if deposit_id is not None:
+            body["deposit_id"] = deposit_id
         if person_applications and business_application_id:
             raise AccountApplicationConfigError(
                 "Business applications do not accept person_applications. "
